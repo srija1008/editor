@@ -1,0 +1,232 @@
+Flask is a lightweight web framework for Python. It’s often used to build web applications and REST APIs because it’s simple, flexible, and easy to get started with.
+
+Flask(__name__): Creates the Flask app.
+
+@app.route('/'): Binds the URL / to the home function.
+
+debug=True: Automatically restarts the server on changes and shows errors.
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>image Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: fadeIn 1.5s ease-in;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideDown {
+            from {transform: translateY(-20px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 image Editor</h1>
+    <form action="/upload-image" method="post" enctype="multipart/form-data">
+        <input type="file" name="imagefile" accept="image/*" required><br>
+        <button type="submit">Upload & Edit image</button>
+    </form>
+    {% if image_url %}
+    <h2>Image Preview:</h2>
+    <img src="{{ image_url }}" alt="Image" style="max-width: 300px;"><br><br>
+
+    <!-- Rotate Button -->
+    <form action="/rotate-image" method="post">
+        <input type="hidden" name="filename" value="{{ image_filename }}">
+        <button type="submit">Rotate 90°</button>
+    </form>
+    <h3>Crop Image</h3>
+    <form action="/crop-image" method="post">
+        <input type="hidden" name="filename" value="{{ image_filename }}">
+        <label>Left: <input type="number" name="left" required></label>
+        <label>Top: <input type="number" name="top" required></label>
+        <label>Right: <input type="number" name="right" required></label>
+        <label>Bottom: <input type="number" name="bottom" required></label>
+        <button type="submit">Crop</button>
+    </form>
+    <!-- Resize -->
+    <h3>Resize Image</h3>
+    <form action="/resize-image" method="post">
+        <input type="hidden" name="filename" value="{{ image_filename }}">
+        <label>Width: <input type="number" name="width" required></label>
+        <label>Height: <input type="number" name="height" required></label>
+        <button type="submit">Resize</button>
+    </form>
+
+    <!-- Grayscale -->
+    <form action="/grayscale-image" method="post" style="margin-top: 15px;">
+        <input type="hidden" name="filename" value="{{ image_filename }}">
+        <button type="submit">Convert to Grayscale</button>
+    </form>
+
+    <!-- Download -->
+    <form action="/download-image" method="post" style="margin-top: 15px;">
+        <input type="hidden" name="filename" value="{{ image_filename }}">
+        <button type="submit">Download Edited Image</button>
+    </form>
+    {% endif %}
+</body>
+</html>
+----------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            text-align: center;
+            padding: 40px;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+        .left, .right {
+            flex: 1;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: fadeIn 1.5s ease-in;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideDown {
+            from {transform: translateY(-20px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Video Editor</h1>
+    <form action="/upload-video" method="post" enctype="multipart/form-data">
+        <input type="file" name="videofile" accept="video/mp4" required><br>
+        <button type="submit">Upload & Edit Video</button>
+    </form>
+    {% if video_url %}
+    <div class="container">
+        <!-- Left: Video Preview -->
+        <div class="left">
+            <h3>Preview:</h3>
+            <video controls>
+                <source src="{{ video_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Right: Editing Options -->
+        <div class="right">
+            <!-- Rotate -->
+             <h3>Edit Options</h3>
+
+            <form action="/rotate-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Rotate 90°</button>
+            </form>
+
+            <form action="/flip-horizontal" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Flip Horizontally</button>
+            </form>
+
+            <form action="/flip-vertical" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Flip Vertically</button>
+            </form>
+
+            <form action="/convert-grayscale" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Grayscale</button>
+            </form>
+            <h2>Add Subtitles to Video</h2>
+            <form action="/add-subtitles" method="post" enctype="multipart/form-data">
+                <label>Upload Video (.mp4):</label><br>
+                <input type="file" name="videofile" accept=".mp4" required><br><br>
+
+                <label>Upload Subtitles (.srt, optional):</label><br>
+                <input type="file" name="srtfile" accept=".srt"><br><br>
+
+                <button type="submit">Add Subtitles</button>
+            </form>
+
+
+            <!-- Download -->
+            <form action="/download-video" method="post">
+                <input type="hidden" name="filename" value="{{ video_filename }}">
+                <button type="submit">Download Video</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>
+
+
+        

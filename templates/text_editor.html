@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: fadeIn 1.5s ease-in;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideDown {
+            from {transform: translateY(-20px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <h1>📄 Text File Editor</h1>
+    <form action="/upload-text" method="post" enctype="multipart/form-data">
+        <input type="file" name="textfile" accept=".txt" required><br>
+        <button type="submit">Upload & Edit Text</button>
+    </form>
+    {% if content %}
+    <form action="/save-text" method="post">
+        <textarea name="edited_text" rows="20" cols="80">{{ content }}</textarea><br>
+        <button type="submit">Save Changes</button>
+    </form>
+    {% endif %}
+</body>
+</html>

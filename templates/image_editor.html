@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            text-align: center;
+            padding: 40px;
+        }
+        h1{
+            color: #333;
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+        .left {
+            flex: 1;
+        }
+        .right {
+            flex: 1;
+        }
+        img {
+            max-width: 50%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: fadeIn 1.5s ease-in;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideDown {
+            from {transform: translateY(-20px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Image Editor</h1>
+
+    <form action="/upload-image" method="post" enctype="multipart/form-data">
+        <input type="file" name="imagefile" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if image_url %}
+    <div class="container">
+        <!-- Left: Image -->
+        <div class="left">
+            <h3>Preview:</h3>
+            <img src="{{ image_url }}" alt="Image">
+        </div>
+
+        <!-- Right: Editing Options -->
+        <div class="right">
+            <!-- Rotate -->
+            <form action="/rotate-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Rotate 90°</button>
+            </form>
+
+            <!-- Crop -->
+            <form action="/crop-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <h4>Crop</h4>
+                <label>Left: <input type="number" name="left" required></label><br>
+                <label>Top: <input type="number" name="top" required></label><br>
+                <label>Right: <input type="number" name="right" required></label><br>
+                <label>Bottom: <input type="number" name="bottom" required></label><br>
+                <button type="submit">Crop</button>
+            </form>
+
+            <!-- Resize -->
+            <form action="/resize-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <h4>Resize</h4>
+                <label>Width: <input type="number" name="width" required></label><br>
+                <label>Height: <input type="number" name="height" required></label><br>
+                <button type="submit">Resize</button>
+            </form>
+
+            <!-- Grayscale -->
+            <form action="/grayscale-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Convert to Grayscale</button>
+            </form>
+
+            <!-- Download -->
+            <form action="/download-image" method="post">
+                <input type="hidden" name="filename" value="{{ image_filename }}">
+                <button type="submit">Download Image</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text-to-Speech</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            padding: 2rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            animation: slideDown 1s ease-in;
+        }
+
+        .container {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .form-section, .output-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            animation: fadeIn 1.2s ease-in;
+        }
+
+        .form-section textarea {
+            width: 95%;
+            height: 120px;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: none;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-section select {
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-section button {
+            background: #008CBA;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .form-section button:hover {
+            background: #005f7f;
+        }
+
+        .output-section audio {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .output-section a {
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .output-section a:hover {
+            background-color: #2e7d32;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>🗣️ Text to Speech Converter</h2>
+
+    <div class="container">
+        <div class="form-section">
+            <form method="POST" action="/tts">
+                <textarea name="tts_text" placeholder="Enter text here..." required></textarea><br>
+                <label for="lang"><strong>Select Language:</strong></label><br>
+                <select name="lang" id="lang">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="te">Telugu</option>
+                    <option value="ta">Tamil</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                </select><br><br>
+                <button type="submit">🔊 Convert to Speech</button>
+            </form>
+        </div>
+
+        {% if audio_url %}
+        <div class="output-section">
+            <h3>🔊 Preview</h3>
+            <audio controls>
+                <source src="{{ audio_url }}" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio><br>
+            <a href="{{ audio_url }}" download="speech.mp3">⬇️ Download MP3</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
